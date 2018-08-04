@@ -1,4 +1,4 @@
-<?php if(!empty($productsonoffer)) { ?>
+<?php if(!empty($jobs)) { ?>
 <style type="text/css">
 .peroff {
 	float: right;
@@ -35,25 +35,25 @@
 	padding: 0px;
 	transition-duration: 0.5s;
 }
-.loadoffershead h2{
+.loadjobshead h2{
 	text-align: center;
 	text-transform: uppercase;
 }
 </style>
 <div class="container panel">
-  <div class="loadoffershead center box-heading"><h2><?php echo $heading_title; ?></h2></div>
+  <div class="loadjobshead center box-heading"><h2><?php echo $heading_title; ?></h2></div>
   <div class="title-divider-style-6"></div>
 	<div class="panel-content" style="text-align: center;">
 	  <div class="col-xs-12 offersDiv">
-	  	<?php foreach($productsonoffer as $key => $product) { 
-		  	$thumb = $product['image'];
+	  	<?php foreach($jobs as $key => $job) { 
+		  	$thumb = $job['image'];
 		  	if(!empty($thumb)) {
 		  		$thumb = 'image/'.$thumb;
 		  	} else {
 		  		$thumb = 'image/no_image.png';
 		  	}
-		  	$perc = ($product['realprice'] - $product['price'])/100;
-		  	$href = 'index.php?route=product/product&product_id='.$product['product_id'];
+		  	$perc = ($job['realprice'] - $job['price'])/100;
+		  	$href = 'index.php?route=job/job&job_id='.$job['job_id'];
 		  	if($key == 0) { ?>
 			  	<div class="mainoffer col-xs-12 col-sm-5" itemprop="offers" itemtype="http://schema.org/Offer">
 			  		<a href="<?php echo $href ?>">
@@ -65,7 +65,7 @@
 			  	</div>
 			  	<div class="otheroffers col-xs-12 col-sm-7">
 				  	<?php } else { 
-				  	if($key <= $loadoffers_limit) { ?>
+				  	if($key <= $loadjobs_limit) { ?>
 				  			<div class="col-xs-12 col-sm-4" itemprop="offers" itemtype="http://schema.org/Offer">
 				  				<a href="<?php echo $href ?>">
 						  			<img class="img-responsive" src="<?php echo $thumb ?>"/>

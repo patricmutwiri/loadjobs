@@ -1,20 +1,20 @@
 <?php
-class ControllerModuleLoadoffers extends Controller {
+class ControllerModuleLoadjobs extends Controller {
     public function index() {
-        $this->load->language('module/loadoffers'); // loads the language file of loadoffers
+        $this->load->language('module/loadjobs'); // loads the language file of loadjobs
          
         $data['heading_title'] = $this->language->get('heading_title'); // set the heading_title of the module
          
-        $data['loadoffers_value'] = html_entity_decode($this->config->get('loadoffers_text_field')); // gets the saved value of loadoffers text field and parses it to a variable to use this inside our module view
+        $data['loadjobs_value'] = html_entity_decode($this->config->get('loadjobs_text_field')); // gets the saved value of loadjobs text field and parses it to a variable to use this inside our module view
         $group = '';
-        if($this->config->get('loadoffers_text_field') == 'yes'){
+        if($this->config->get('loadjobs_text_field') == 'yes'){
             $group = ' GROUP BY pd.product_id ';
         }
-        $data['loadoffers_limit'] = $this->config->get('loadoffers_limit_field');
-        $limit = $this->config->get('loadoffers_limit_field');
+        $data['loadjobs_limit'] = $this->config->get('loadjobs_limit_field');
+        $limit = $this->config->get('loadjobs_limit_field');
         if(!empty($limit)) {
             $limit = ' LIMIT '.$limit;
-            $data['loadoffers_limit'] = 6;
+            $data['loadjobs_limit'] = 6;
         }
         $this->load->model('catalog/product');
         $this->load->model('tool/image');
@@ -27,10 +27,10 @@ class ControllerModuleLoadoffers extends Controller {
         $data['productsonoffer'] = $results; //$this->model_catalog_product->getProductsDiscounts();
         
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/loadoffers.tpl')) {
-            return $this->load->view($this->config->get('config_template') . '/template/module/loadoffers.tpl', $data);
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/loadjobs.tpl')) {
+            return $this->load->view($this->config->get('config_template') . '/template/module/loadjobs.tpl', $data);
         } else {
-            return $this->load->view('default/template/module/loadoffers.tpl', $data);
+            return $this->load->view('default/template/module/loadjobs.tpl', $data);
         }
     }
 }
