@@ -83,6 +83,13 @@ class ControllerModuleLoadjobs extends Controller {
      
         $data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL'); // URL to be redirected when cancel button is pressed
               
+        // limit
+        if (isset($this->request->post['loadjobs_limit_field'])) {
+            $data['loadjobs_limit_field'] = $this->request->post['loadjobs_limit_field'];
+        } else {
+            $data['loadjobs_limit_field'] = $this->config->get('loadjobs_limit_field');
+        } 
+        
         // reference field/code
         if (isset($this->request->post['loadjobs_text_field'])) {
             foreach ($this->request->post['loadjobs_text_field'] as $key => $loadjobs_text_fieldx) {
@@ -94,12 +101,8 @@ class ControllerModuleLoadjobs extends Controller {
             }
         }
         $data['totaljobs'] = count($data['loadjobs_text_field']);
-        // limit
-        if (isset($this->request->post['loadjobs_limit_field'])) {
-            $data['loadjobs_limit_field'] = $this->request->post['loadjobs_limit_field'];
-        } else {
-            $data['loadjobs_limit_field'] = $this->config->get('loadjobs_limit_field');
-        }  
+
+        
         // status (enabled / disabled)
         if (isset($this->request->post['loadjobs_status_field'])) {
             foreach ($this->request->post['loadjobs_status_field'] as $key => $loadjobs_status_fieldx) {
@@ -110,6 +113,7 @@ class ControllerModuleLoadjobs extends Controller {
                 $data['loadjobs_status_field'][] = $config_loadjobs_status_fieldx;
             }
         }
+        
         // business
         if (isset($this->request->post['loadjobs_business_field'])) {
             foreach ($this->request->post['loadjobs_business_field'] as $key => $loadjobs_business_fieldx) {
@@ -120,6 +124,7 @@ class ControllerModuleLoadjobs extends Controller {
                 $data['loadjobs_business_field'][] = $config_loadjobs_business_fieldx;
             }
         }
+        
         // position
         if (isset($this->request->post['loadjobs_position_field'])) {
             foreach ($this->request->post['loadjobs_position_field'] as $key => $loadjobs_position_fieldx) {
@@ -130,6 +135,7 @@ class ControllerModuleLoadjobs extends Controller {
                 $data['loadjobs_position_field'][] = $config_loadjobs_position_fieldx;
             }
         }
+        
         // description
         if (isset($this->request->post['loadjobs_description_field'])) {
             foreach ($this->request->post['loadjobs_description_field'] as $key => $loadjobs_description_fieldx) {
@@ -140,6 +146,7 @@ class ControllerModuleLoadjobs extends Controller {
                 $data['loadjobs_description_field'][] = $config_loadjobs_description_fieldx;
             }
         }
+        
         // requirements
         if (isset($this->request->post['loadjobs_requirements_field'])) {
             foreach ($this->request->post['loadjobs_requirements_field'] as $key => $loadjobs_requirements_fieldx) {
@@ -150,6 +157,7 @@ class ControllerModuleLoadjobs extends Controller {
                 $data['loadjobs_requirements_field'][] = $config_loadjobs_requirements_fieldx;
             }
         }
+        
         // deadline
         if (isset($this->request->post['loadjobs_deadline_field'])) {
             foreach ($this->request->post['loadjobs_deadline_field'] as $key => $loadjobs_deadline_fieldx) {
