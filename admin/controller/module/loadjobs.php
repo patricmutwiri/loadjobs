@@ -83,29 +83,85 @@ class ControllerModuleLoadjobs extends Controller {
      
         $data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL'); // URL to be redirected when cancel button is pressed
               
-        // This block checks, if the load offers text field is set it parses it to view otherwise get the default 
-        // load offers text field from the database and parse it
+        // reference field/code
         if (isset($this->request->post['loadjobs_text_field'])) {
-            $data['loadjobs_text_field'] = $this->request->post['loadjobs_text_field'];
+            foreach ($this->request->post['loadjobs_text_field'] as $key => $loadjobs_text_fieldx) {
+                $data['loadjobs_text_field'][] = $loadjobs_text_fieldx;
+            }
         } else {
-            $data['loadjobs_text_field'] = $this->config->get('loadjobs_text_field');
+            foreach ($this->config->get('loadjobs_text_field') as $key => $config_loadjobs_text_fieldx) {
+                $data['loadjobs_text_field'][] = $config_loadjobs_text_fieldx;
+            }
         }
-
+        $data['totaljobs'] = count($data['loadjobs_text_field']);
+        // limit
         if (isset($this->request->post['loadjobs_limit_field'])) {
             $data['loadjobs_limit_field'] = $this->request->post['loadjobs_limit_field'];
         } else {
             $data['loadjobs_limit_field'] = $this->config->get('loadjobs_limit_field');
+        }  
+        // status (enabled / disabled)
+        if (isset($this->request->post['loadjobs_status_field'])) {
+            foreach ($this->request->post['loadjobs_status_field'] as $key => $loadjobs_status_fieldx) {
+                $data['loadjobs_status_field'][] = $loadjobs_status_fieldx;
+            }
+        } else {
+            foreach ($this->config->get('loadjobs_status_field') as $key => $config_loadjobs_status_fieldx) {
+                $data['loadjobs_status_field'][] = $config_loadjobs_status_fieldx;
+            }
+        }
+        // business
+        if (isset($this->request->post['loadjobs_business_field'])) {
+            foreach ($this->request->post['loadjobs_business_field'] as $key => $loadjobs_business_fieldx) {
+                $data['loadjobs_business_field'][] = $loadjobs_business_fieldx;
+            }
+        } else {
+            foreach ($this->config->get('loadjobs_business_field') as $key => $config_loadjobs_business_fieldx) {
+                $data['loadjobs_business_field'][] = $config_loadjobs_business_fieldx;
+            }
+        }
+        // position
+        if (isset($this->request->post['loadjobs_position_field'])) {
+            foreach ($this->request->post['loadjobs_position_field'] as $key => $loadjobs_position_fieldx) {
+                $data['loadjobs_position_field'][] = $loadjobs_position_fieldx;
+            }
+        } else {
+            foreach ($this->config->get('loadjobs_position_field') as $key => $config_loadjobs_position_fieldx) {
+                $data['loadjobs_position_field'][] = $config_loadjobs_position_fieldx;
+            }
+        }
+        // description
+        if (isset($this->request->post['loadjobs_description_field'])) {
+            foreach ($this->request->post['loadjobs_description_field'] as $key => $loadjobs_description_fieldx) {
+                $data['loadjobs_description_field'][] = $loadjobs_description_fieldx;
+            }
+        } else {
+            foreach ($this->config->get('loadjobs_description_field') as $key => $config_loadjobs_description_fieldx) {
+                $data['loadjobs_description_field'][] = $config_loadjobs_description_fieldx;
+            }
+        }
+        // requirements
+        if (isset($this->request->post['loadjobs_requirements_field'])) {
+            foreach ($this->request->post['loadjobs_requirements_field'] as $key => $loadjobs_requirements_fieldx) {
+                $data['loadjobs_requirements_field'][] = $loadjobs_requirements_fieldx;
+            }
+        } else {
+            foreach ($this->config->get('loadjobs_requirements_field') as $key => $config_loadjobs_requirements_fieldx) {
+                $data['loadjobs_requirements_field'][] = $config_loadjobs_requirements_fieldx;
+            }
+        }
+        // deadline
+        if (isset($this->request->post['loadjobs_deadline_field'])) {
+            foreach ($this->request->post['loadjobs_deadline_field'] as $key => $loadjobs_deadline_fieldx) {
+                $data['loadjobs_deadline_field'][] = $loadjobs_deadline_fieldx;
+            }
+        } else {
+            foreach ($this->config->get('loadjobs_deadline_field') as $key => $config_loadjobs_deadline_fieldx) {
+                $data['loadjobs_deadline_field'][] = $config_loadjobs_deadline_fieldx;
+            }
         }
 
-        
-          
-        // This block parses the status (enabled / disabled)
-        if (isset($this->request->post['loadjobs_status'])) {
-            $data['loadjobs_status'] = $this->request->post['loadjobs_status'];
-        } else {
-            $data['loadjobs_status'] = $this->config->get('loadjobs_status');
-        }
-        
+
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');

@@ -28,14 +28,15 @@
           <div class="form-group required">
             <label class="col-sm-2 control-label" for="textarea-loadjobs_limit_field"><?php echo $entry_limit; ?></label>
             <div class="col-sm-10">
-              <input type="number" required name="loadjobs_limit_field" id="input-limit" class="form-control" value="<?php echo $loadjobs_limit_field ?>">
+              <input type="number" required name="loadjobs_limit_field" data-id="input-limit" class="form-control" value="<?php echo $loadjobs_limit_field ?>">
             </div>
           </div>
           <div class="job-body jobs">
+            <?php for($j = 0; $j < $totaljobs; $j++): ?>
             <div class="form-group">
               <label class="col-sm-2 control-label" for="textarea-loadjobs_text_field"><?php echo $entry_code; ?></label>
               <div class="col-sm-10">
-                <input type="text" name="loadjobs_text_field" data-id="input-reference" class="form-control" value="REF:<?php echo date('y/m') ?>" />
+                <input type="text" name="loadjobs_text_field[]" data-id="input-reference" class="form-control" value="<?php echo $loadjobs_text_field[$j] ?>" />
                 <?php if ($error_code) { ?>
                 <div class="text-danger"><?php echo $error_code; ?></div>
                 <?php } ?>
@@ -44,7 +45,7 @@
             <div class="form-group required">
               <label class="col-sm-2 control-label" for="textarea-loadjobs_business_field"><?php echo $entry_business; ?></label>
               <div class="col-sm-10">
-                <input type="text" name="loadjobs_business_field" data-id="input-business" class="form-control" value="" />
+                <input type="text" name="loadjobs_business_field[]" data-id="input-business" class="form-control" value="<?php echo $loadjobs_business_field[$j] ?>" />
                 <?php if ($error_code) { ?>
                 <div class="text-danger"><?php echo $error_code; ?></div>
                 <?php } ?>
@@ -53,7 +54,7 @@
             <div class="form-group required">
               <label class="col-sm-2 control-label" for="textarea-loadjobs_position_field"><?php echo $entry_position; ?></label>
               <div class="col-sm-10">
-                <input type="text" name="loadjobs_position_field" data-id="input-position" class="form-control" value="" />
+                <input type="text" name="loadjobs_position_field[]" data-id="input-position" class="form-control" value="<?php echo $loadjobs_position_field[$j] ?>" />
                 <?php if ($error_code) { ?>
                 <div class="text-danger"><?php echo $error_code; ?></div>
                 <?php } ?>
@@ -62,7 +63,7 @@
             <div class="form-group required">
               <label class="col-sm-2 control-label" for="textarea-loadjobs_description_field"><?php echo $entry_description; ?></label>
               <div class="col-sm-10">
-                <input type="text" name="loadjobs_description_field" data-id="input-description" class="form-control" value="" />
+                <input type="text" name="loadjobs_description_field[]" data-id="input-description" class="form-control" value="<?php echo $loadjobs_description_field[$j] ?>" />
                 <?php if ($error_code) { ?>
                 <div class="text-danger"><?php echo $error_code; ?></div>
                 <?php } ?>
@@ -71,7 +72,7 @@
             <div class="form-group required">
               <label class="col-sm-2 control-label" for="textarea-loadjobs_requirements_field"><?php echo $entry_requirements; ?></label>
               <div class="col-sm-10">
-                <input type="text" name="loadjobs_requirements_field" data-id="input-requirements" class="form-control" value="" />
+                <input type="text" name="loadjobs_requirements_field[]" data-id="input-requirements" class="form-control" value="<?php echo $loadjobs_requirements_field[$j] ?>" />
                 <?php if ($error_code) { ?>
                 <div class="text-danger"><?php echo $error_code; ?></div>
                 <?php } ?>
@@ -81,7 +82,7 @@
             <div class="form-group required">
               <label class="col-sm-2 control-label" for="textarea-loadjobs_deadline_field"><?php echo $entry_deadline; ?></label>
               <div class="col-sm-10">
-                <input type="date" name="loadjobs_deadline_field" data-id="input-deadline" class="form-control" value="" placeholder="<?php echo date('d-m-y', time()) ?>" />
+                <input type="date" name="loadjobs_deadline_field[]" data-id="input-deadline" class="form-control" value="<?php echo $loadjobs_deadline_field[$j] ?>" placeholder="<?php echo date('d-m-y', time()) ?>" />
                 <?php if ($error_code) { ?>
                 <div class="text-danger"><?php echo $error_code; ?></div>
                 <?php } ?>
@@ -90,8 +91,8 @@
             <div class="form-group">
               <label class="col-sm-2 control-label" for="input-status"><?php echo $entry_status; ?></label>
               <div class="col-sm-10">
-                <select name="loadjobs_status" data-id="input-status" class="form-control">
-                  <?php if ($loadjobs_status) { ?>
+                <select name="loadjobs_status_field[]" data-id="input-status" class="form-control">
+                  <?php if ($loadjobs_status[$j]) { ?>
                   <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
                   <option value="0"><?php echo $text_disabled; ?></option>
                   <?php } else { ?>
@@ -102,9 +103,10 @@
               </div>
             </div>
             <div class="form-group col-xs-12 add-new">
-              <a href="#new" class="btn btn-primary"> Add Job</a>
+              <a href="#new" class="col-xs-6 btn btn-primary"> Add Job</a>
               <hr/>
             </div>
+            <?php endfor; ?>
           </div>
         </form> 
       </div>
