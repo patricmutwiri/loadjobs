@@ -8,7 +8,7 @@ $_['text_edit']           = 'Edit Load Jobs Module';
 $_['text_success']        = 'Success: You have modified module Load Jobs!';
  
 // Entry
-$_['entry_code']          = 'Grouping By Business:';
+$_['entry_code']          = 'Job Reference:';
 $_['entry_business']         = 'Business Name:';
 $_['entry_limit']         = 'Jobs Limit:';
 $_['entry_position']         = 'Position:';
