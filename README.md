@@ -1,10 +1,13 @@
-## Load Job offers
+# Load Job offers
 
 Load a list of job opportunities from the database.
 
-# Loads
+## Loads
 
 - Position.
-- Location/Business Name.
+- Ref. Number
+- Business Name.
 - Description.
+- Requirements
 - Deadline
+- Status
