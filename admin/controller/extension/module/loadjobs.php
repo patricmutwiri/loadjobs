@@ -107,9 +107,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
                 $data['loadjobs_status_field'][] = $loadjobs_status_fieldx;
             }
         } else {
-            foreach ($this->config->get('loadjobs_status_field') as $key => $config_loadjobs_status_fieldx) {
-                $data['loadjobs_status_field'][] = $config_loadjobs_status_fieldx;
-            }
+                $data['loadjobs_status_field'][] = $this->config->get('loadjobs_status_field');
         }
         
         // business
@@ -118,9 +116,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
                 $data['loadjobs_business_field'][] = $loadjobs_business_fieldx;
             }
         } else {
-            foreach ($this->config->get('loadjobs_business_field') as $key => $config_loadjobs_business_fieldx) {
-                $data['loadjobs_business_field'][] = $config_loadjobs_business_fieldx;
-            }
+                $data['loadjobs_business_field'][] = $this->config->get('loadjobs_business_field');
         }
         
         // position
@@ -129,9 +125,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
                 $data['loadjobs_position_field'][] = $loadjobs_position_fieldx;
             }
         } else {
-            foreach ($this->config->get('loadjobs_position_field') as $key => $config_loadjobs_position_fieldx) {
-                $data['loadjobs_position_field'][] = $config_loadjobs_position_fieldx;
-            }
+                $data['loadjobs_position_field'][] = $this->config->get('loadjobs_position_field');
         }
         
         // description
@@ -140,9 +134,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
                 $data['loadjobs_description_field'][] = $loadjobs_description_fieldx;
             }
         } else {
-            foreach ($this->config->get('loadjobs_description_field') as $key => $config_loadjobs_description_fieldx) {
-                $data['loadjobs_description_field'][] = $config_loadjobs_description_fieldx;
-            }
+                $data['loadjobs_description_field'][] = $this->config->get('loadjobs_description_field');
         }
         
         // requirements
@@ -151,9 +143,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
                 $data['loadjobs_requirements_field'][] = $loadjobs_requirements_fieldx;
             }
         } else {
-            foreach ($this->config->get('loadjobs_requirements_field') as $key => $config_loadjobs_requirements_fieldx) {
-                $data['loadjobs_requirements_field'][] = $config_loadjobs_requirements_fieldx;
-            }
+                $data['loadjobs_requirements_field'][] = $this->config->get('loadjobs_requirements_field');
         }
         
         // deadline
@@ -162,9 +152,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
                 $data['loadjobs_deadline_field'][] = $loadjobs_deadline_fieldx;
             }
         } else {
-            foreach ($this->config->get('loadjobs_deadline_field') as $key => $config_loadjobs_deadline_fieldx) {
-                $data['loadjobs_deadline_field'][] = $config_loadjobs_deadline_fieldx;
-            }
+                $data['loadjobs_deadline_field'][] = $this->config->get('loadjobs_deadline_field');
         }
 
 
@@ -172,7 +160,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
-        $this->response->setOutput($this->load->view('extension/module/loadjobs.tpl', $data));
+        $this->response->setOutput($this->load->view('extension/module/googlemap', $data));
 
     }
 
