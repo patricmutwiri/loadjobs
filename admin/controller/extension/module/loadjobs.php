@@ -40,6 +40,11 @@ class ControllerExtensionModuleLoadjobs extends Controller {
         $data['entry_layout'] = $this->language->get('entry_layout');
         $data['entry_position'] = $this->language->get('entry_position');
         $data['entry_status'] = $this->language->get('entry_status');
+        $data['entry_business'] = $this->language->get('entry_business');
+        $data['entry_deadline'] = $this->language->get('entry_deadline');
+        $data['entry_description'] = $this->language->get('entry_description');
+        $data['entry_requirements'] = $this->language->get('entry_requirements');
+        $data['entry_position'] = $this->language->get('entry_position');
         $data['entry_sort_order'] = $this->language->get('entry_sort_order');
      
         $data['button_save'] = $this->language->get('button_save');
