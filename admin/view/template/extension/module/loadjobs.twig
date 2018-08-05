@@ -1,0 +1,117 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-loadjobs" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+      </div>
+      <div class="panel-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" data-id="form-createjob" class="form-horizontal">
+          <div class="form-group required">
+            <label class="col-sm-2 control-label" for="textarea-loadjobs_limit_field">{{ entry_limit }}</label>
+            <div class="col-sm-10">
+              <input type="number" required name="loadjobs_limit_field" data-id="input-limit" class="form-control" value="{{ loadjobs_limit_field }}">
+            </div>
+          </div>
+          <div class="job-body jobs">
+            {% for j in 0..totaljobs %}
+            <div class="form-group">
+              <label class="col-sm-2 control-label" for="textarea-loadjobs_text_field">{{ entry_code }}</label>
+              <div class="col-sm-10">
+                <input type="text" name="loadjobs_text_field[]" data-id="input-reference" class="form-control" value="{{ loadjobs_text_field.j }}" />
+                {% if error_code %}
+                <div class="text-danger">{{ error_code }}</div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="form-group required">
+              <label class="col-sm-2 control-label" for="textarea-loadjobs_business_field">{{ entry_business }}</label>
+              <div class="col-sm-10">
+                <input type="text" name="loadjobs_business_field[]" data-id="input-business" class="form-control" value="{{ loadjobs_business_field.j }}" />
+                {% if error_code %}
+                <div class="text-danger">{{ error_code }}</div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="form-group required">
+              <label class="col-sm-2 control-label" for="textarea-loadjobs_position_field">{{ entry_position }}</label>
+              <div class="col-sm-10">
+                <input type="text" name="loadjobs_position_field[]" data-id="input-position" class="form-control" value="{{ loadjobs_position_field.j }}" />
+                {% if error_code %}
+                <div class="text-danger">{{ error_code }}</div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="form-group required">
+              <label class="col-sm-2 control-label" for="textarea-loadjobs_description_field">{{ entry_description }}</label>
+              <div class="col-sm-10">
+                <input type="text" name="loadjobs_description_field[]" data-id="input-description" class="form-control" value="{{ loadjobs_description_field.j }}" />
+                {% if error_code %}
+                <div class="text-danger">{{ error_code }}</div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="form-group required">
+              <label class="col-sm-2 control-label" for="textarea-loadjobs_requirements_field">{{ entry_requirements }}</label>
+              <div class="col-sm-10">
+                <input type="text" name="loadjobs_requirements_field[]" data-id="input-requirements" class="form-control" value="{{ loadjobs_requirements_field.j }}" />
+                {% if error_code %}
+                <div class="text-danger">{{ error_code }}</div>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="form-group required">
+              <label class="col-sm-2 control-label" for="textarea-loadjobs_deadline_field">{{ entry_deadline }}</label>
+              <div class="col-sm-10">
+                <input type="date" name="loadjobs_deadline_field[]" data-id="input-deadline" class="form-control" value="{{ loadjobs_deadline_field.j }}" placeholder="{{ date('d-m-y', time()) }}" />
+                {% if error_code %}
+                <div class="text-danger">{{ error_code }}</div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
+              <div class="col-sm-10">
+                <select name="loadjobs_status_field[]" data-id="input-status" class="form-control">
+                  {% if loadjobs_status.j %}
+                  <option value="1" selected="selected">{{ text_enabled }}</option>
+                  <option value="0">{{ text_disabled }}</option>
+                  {% else %}
+                  <option value="1">{{ text_enabled }}</option>
+                  <option value="0" selected="selected">{{ text_disabled }}</option>
+                  {% endif %}
+                </select>
+              </div>
+            </div>
+            <div class="form-group col-xs-12 add-new">
+              <a href="#new" class="col-xs-6 btn btn-primary"> Add Job</a>
+              <hr/>
+            </div>
+            {{ endfor }}
+          </div>
+        </form> 
+      </div>
+  </div>
+  </div>
+</div>
+
+{{ footer }}
