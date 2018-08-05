@@ -82,7 +82,7 @@
             <div class="form-group required">
               <label class="col-sm-2 control-label" for="textarea-loadjobs_deadline_field">{{ entry_deadline }}</label>
               <div class="col-sm-10">
-                <input type="date" name="loadjobs_deadline_field[]" data-id="input-deadline" class="form-control" value="{{ loadjobs_deadline_field.j }}" placeholder="{{ date('d-m-y', time()) }}" />
+                <input type="date" name="loadjobs_deadline_field[]" data-id="input-deadline" class="form-control" value="{{ loadjobs_deadline_field.j }}" />
                 {% if error_code %}
                 <div class="text-danger">{{ error_code }}</div>
                 {% endif %}
