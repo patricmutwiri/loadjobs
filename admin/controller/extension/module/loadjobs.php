@@ -2,6 +2,51 @@
 class ControllerExtensionModuleLoadjobs extends Controller {
     private $error = array(); // This is used to set the errors, if any.
  
+    protected function jobTables()
+    {
+        // create table
+        $jobsT = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "jobs'");
+        if(!$jobsT->num_rows) {
+            $query = "CREATE TABLE ".DB_PREFIX."jobs (
+                      job_id int(11) AUTO_INCREMENT,
+                      ref_id varchar(50) NOT NULL,
+                      business varchar(50) NOT NULL,
+                      position varchar(50) NOT NULL,
+                      description varchar(200) NOT NULL,
+                      requirements varchar(200) NOT NULL,
+                      deadline varchar(20) NOT NULL,
+                      status int,
+                      PRIMARY KEY  (job_id)
+                      )";
+            if(!$this->db->query($query)) {
+                error_log('jobs table creation failed');
+                $this->error['code'] = 'jobs table creation failed';
+            }
+        }
+        
+        $appsT = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "job_applications'");
+        if(!$appsT->num_rows) {
+            $query = "CREATE TABLE ".DB_PREFIX."job_applications (
+                      application_id int(11) AUTO_INCREMENT,
+                      job_id int(5) NOT NULL,
+                      resume varchar(100) NOT NULL,
+                      cover varchar(200) NOT NULL,
+                      application_date varchar(200) NOT NULL,
+                      stages varchar(200) NOT NULL,
+                      PRIMARY KEY  (application_id)
+                      )";
+            if(!$this->db->query($query)) {
+                error_log('job_applications table creation failed');
+                $this->error['code'] = 'job_applications table creation failed';
+            }
+        }
+        if (!$this->error) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function index() {
         // Loading the language file of loadjobs
         $this->load->language('extension/module/loadjobs'); 
@@ -21,7 +66,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
             $this->session->data['success'] = $this->language->get('text_success');
      
             // Redirect to the Module Listing
-            $this->response->redirect($this->url->link('extension/module', 'user_token=' . $this->session->data['user_token'], 'SSL'));
+            $this->response->redirect($this->url->link('extension/module/loadjobs', 'user_token=' . $this->session->data['user_token'], 'SSL'));
         }
      
         // Assign the language data for parsing it to view
@@ -86,14 +131,20 @@ class ControllerExtensionModuleLoadjobs extends Controller {
           
         $data['action'] = $this->url->link('extension/module/loadjobs', 'user_token=' . $this->session->data['user_token'], 'SSL'); // URL to be directed when the save button is pressed
      
-        $data['cancel'] = $this->url->link('extension/module', 'user_token=' . $this->session->data['user_token'], 'SSL'); // URL to be redirected when cancel button is pressed
+        $data['cancel'] = $this->url->link('extension/module/loadjobs', 'user_token=' . $this->session->data['user_token'], 'SSL'); // URL to be redirected when cancel button is pressed
               
         // limit
         if (isset($this->request->post['loadjobs_limit_field'])) {
             $data['loadjobs_limit_field'] = $this->request->post['loadjobs_limit_field'];
         } else {
             $data['loadjobs_limit_field'] = $this->config->get('loadjobs_limit_field');
-        } 
+        }
+
+        if (isset($this->request->post['loadjobs_status_field'])) {
+            $data['loadjobs_status_field'] = $this->request->post['loadjobs_status_field'];
+        } else {
+            $data['loadjobs_status_field'] = $this->config->get('loadjobs_status_field');
+        }
        
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
@@ -101,14 +152,17 @@ class ControllerExtensionModuleLoadjobs extends Controller {
         
         $data['status'] = '';
         if (isset($this->request->post['savejobs'])) {
-            $data['status'] = $this->saveJobs();
+            $data['status'] = json_encode($this->saveJobs());
         }
 
         // list jobs
         $data['totaljobs'] = 0;
-        $jobs = $this->db->query('SELECT * FROM '.DB_PREFIX.'jobs');
-        $data['jobs'] = $jobs->rows;
-        $data['totaljobs'] = count($data['jobs']);
+        $data['jobs'] = null;
+        if($this->jobTables()) {
+            $jobs = $this->db->query('SELECT * FROM '.DB_PREFIX.'jobs');
+            $data['jobs'] = $jobs->rows;
+            $data['totaljobs'] = count($data['jobs']);
+        }
 
         $this->response->setOutput($this->load->view('extension/module/loadjobs', $data));
 
@@ -122,7 +176,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
             $jobs['status'] = '';
             $count  = count($this->request->post['loadjobs_text_field']);
             for ($i=0; $i < $count; $i++):
-                $jobs['loadjobs_text_field'][$i]        = $this->request->post['loadjobs_text_field'][$i];
+                $jobs['loadjobs_text_field'][$i]        = $this->request->post['loadjobs_text_field'][$i].date('dmH',time());
                 $jobs['loadjobs_status_field'][$i]      = $this->request->post['loadjobs_status_field'][$i];
                 $jobs['loadjobs_business_field'][$i]    = $this->request->post['loadjobs_business_field'][$i];
                 $jobs['loadjobs_position_field'][$i]    = $this->request->post['loadjobs_position_field'][$i];
@@ -171,7 +225,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
         }
         // create table
         $jobsT = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "jobs'");
-        if(!$jobsT) {
+        if(!$jobsT->num_rows) {
             $query = "CREATE TABLE ".DB_PREFIX."jobs (
                       job_id int(11) AUTO_INCREMENT,
                       ref_id varchar(50) NOT NULL,
@@ -190,7 +244,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
         }
         
         $appsT = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "job_applications'");
-        if(!$appsT) {
+        if(!$appsT->num_rows) {
             $query = "CREATE TABLE ".DB_PREFIX."job_applications (
                       application_id int(11) AUTO_INCREMENT,
                       job_id int(5) NOT NULL,

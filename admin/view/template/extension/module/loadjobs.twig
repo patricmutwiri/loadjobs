@@ -15,7 +15,7 @@
   </div>
   <div class="container-fluid">
     {% if status %}
-    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ implode(',', status) }}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ status }}
       <button type="button" class="close" data-dismiss="alert">&times;</button>
     </div>
     {% endif %}
@@ -117,7 +117,7 @@
           </div>
           <hr/>
           <div class="form-group col-xs-12 add-new">
-            <a href="#new" id="newjob" class="col-xs-6 btn btn-primary"> Add Job</a>
+            <span id="newjob" class="newjob-here col-xs-6 btn btn-primary"> Add Job</span>
           </div>
           <div class="form-group col-xs-12">
               <input type="submit" name="savejobs" value="Save Now" class="btn btn-primary" />
@@ -128,12 +128,13 @@
   </div>
 </div>
 <script type="text/javascript">
-  document.getElementById('newjob').addEventListener('click',function(){
+  document.getElementById("newjob").addEventListener('click',function(e){   
     var jobs = document.getElementsByClassName('job-body');
-    var i = tags.length - 1;
+    var i = jobs.length - 1;
     var newrecord = jobs[i];
-    var cln = newrecord.cloneNode(true);
-    document.getElementsByClassName('jobslist')[0].appendChild(cln);
+    var newjob = newrecord.cloneNode(true);
+    document.getElementsByClassName('jobslist')[0].appendChild(newjob);
+    e.preventDefault();
   });
 </script>
 
