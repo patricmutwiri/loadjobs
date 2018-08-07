@@ -133,11 +133,11 @@ class ControllerExtensionModuleLoadjobs extends Controller {
                 $withRef = $this->db->query("SELECT * FROM " . DB_PREFIX . "jobs WHERE ref_id = '" . $this->db->escape($jobs['loadjobs_text_field'][$i]));
                 if($withRef->rows) {
                     // update
-                    $jobs['status'][] = 'REF ID '. $this->db->escape($jobs['loadjobs_text_field'][$i].' exists, try update';
+                    $jobs['status'][] = "REF ID ". $this->db->escape($jobs['loadjobs_text_field'][$i]." exists, try update";
                     if($this->db->query("UPDATE " . DB_PREFIX . "jobs SET `business` = '" . $this->db->escape($jobs['loadjobs_business_field'][$i]) . "', `status` = '" . $this->db->escape($jobs['loadjobs_status_field'][$i]) . "', `position` = '" . $this->db->escape($jobs['loadjobs_position_field'][$i]) . "', `description` = '" . $this->db->escape($jobs['loadjobs_description_field'][$i]) . "', `requirements` = '" . $this->db->escape($jobs['loadjobs_requirements_field'][$i]) . "', `deadline` = '" . $this->db->escape($jobs['loadjobs_deadline_field'][$i]) . "' WHERE ref_id = '" . $jobs['loadjobs_text_field'][$i] . "'")) {
-                        $jobs['status'][] = 'Job with REF ID '. $this->db->escape($jobs['loadjobs_text_field'][$i].' updated successfully';
+                        $jobs['status'][] = "Job with REF ID ". $this->db->escape($jobs['loadjobs_text_field'][$i]." updated successfully";
                     } else {
-                        $jobs['status'][] = 'Job with REF ID '. $this->db->escape($jobs['loadjobs_text_field'][$i].' not updated';
+                        $jobs['status'][] = "Job with REF ID ". $this->db->escape($jobs['loadjobs_text_field'][$i]." not updated";
                     }
                 } else {
                     if(!$this->db->query("INSERT INTO " . DB_PREFIX . "jobs SET  `ref_id` = '" . $this->db->escape($jobs['loadjobs_text_field'][$i]) . "',  `business` = '" . $this->db->escape($jobs['loadjobs_business_field'][$i]) . "', `status` = '" . $this->db->escape($jobs['loadjobs_status_field'][$i]) . "', `position` = '" . $this->db->escape($jobs['loadjobs_position_field'][$i]) . "', `description` = '" . $this->db->escape($jobs['loadjobs_description_field'][$i]) . "', `requirements` = '" . $this->db->escape($jobs['loadjobs_requirements_field'][$i]) . "', `deadline` = '" . $this->db->escape($jobs['loadjobs_deadline_field'][$i]) . "'")) {
