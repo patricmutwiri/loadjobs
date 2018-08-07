@@ -94,79 +94,66 @@ class ControllerExtensionModuleLoadjobs extends Controller {
         } else {
             $data['loadjobs_limit_field'] = $this->config->get('loadjobs_limit_field');
         } 
-        
-        // reference field/code
-        if (isset($this->request->post['loadjobs_text_field'])) {
-            foreach ($this->request->post['loadjobs_text_field'] as $key => $loadjobs_text_fieldx) {
-                $data['loadjobs_text_field'][] = $loadjobs_text_fieldx;
-            }
-        } else {
-                $data['loadjobs_text_field'][] = $this->config->get('loadjobs_text_field');
-        }
-        $data['totaljobs'] = count($data['loadjobs_text_field']);
-
-        
-        // status (enabled / disabled)
-        if (isset($this->request->post['loadjobs_status_field'])) {
-            foreach ($this->request->post['loadjobs_status_field'] as $key => $loadjobs_status_fieldx) {
-                $data['loadjobs_status_field'][] = $loadjobs_status_fieldx;
-            }
-        } else {
-                $data['loadjobs_status_field'][] = $this->config->get('loadjobs_status_field');
-        }
-        
-        // business
-        if (isset($this->request->post['loadjobs_business_field'])) {
-            foreach ($this->request->post['loadjobs_business_field'] as $key => $loadjobs_business_fieldx) {
-                $data['loadjobs_business_field'][] = $loadjobs_business_fieldx;
-            }
-        } else {
-                $data['loadjobs_business_field'][] = $this->config->get('loadjobs_business_field');
-        }
-        
-        // position
-        if (isset($this->request->post['loadjobs_position_field'])) {
-            foreach ($this->request->post['loadjobs_position_field'] as $key => $loadjobs_position_fieldx) {
-                $data['loadjobs_position_field'][] = $loadjobs_position_fieldx;
-            }
-        } else {
-                $data['loadjobs_position_field'][] = $this->config->get('loadjobs_position_field');
-        }
-        
-        // description
-        if (isset($this->request->post['loadjobs_description_field'])) {
-            foreach ($this->request->post['loadjobs_description_field'] as $key => $loadjobs_description_fieldx) {
-                $data['loadjobs_description_field'][] = $loadjobs_description_fieldx;
-            }
-        } else {
-                $data['loadjobs_description_field'][] = $this->config->get('loadjobs_description_field');
-        }
-        
-        // requirements
-        if (isset($this->request->post['loadjobs_requirements_field'])) {
-            foreach ($this->request->post['loadjobs_requirements_field'] as $key => $loadjobs_requirements_fieldx) {
-                $data['loadjobs_requirements_field'][] = $loadjobs_requirements_fieldx;
-            }
-        } else {
-                $data['loadjobs_requirements_field'][] = $this->config->get('loadjobs_requirements_field');
-        }
-        
-        // deadline
-        if (isset($this->request->post['loadjobs_deadline_field'])) {
-            foreach ($this->request->post['loadjobs_deadline_field'] as $key => $loadjobs_deadline_fieldx) {
-                $data['loadjobs_deadline_field'][] = $loadjobs_deadline_fieldx;
-            }
-        } else {
-                $data['loadjobs_deadline_field'][] = $this->config->get('loadjobs_deadline_field');
-        }
-
-
+       
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
+        
+        $data['status'] = '';
+        if (isset($this->request->post['savejobs'])) {
+            $data['status'] = $this->saveJobs();
+        }
+
+        // list jobs
+        $data['totaljobs'] = 0;
+        $jobs = $this->db->query('SELECT * FROM '.DB_PREFIX.'jobs');
+        $data['jobs'] = $jobs->rows;
+        $data['totaljobs'] = count($data['jobs']);
 
         $this->response->setOutput($this->load->view('extension/module/loadjobs', $data));
 
+    }
+
+    // save to db
+    public function saveJobs()
+    {
+        if (isset($this->request->post['loadjobs_text_field'])) {
+            $jobs   = array();
+            $jobs['status'] = '';
+            $count  = count($this->request->post['loadjobs_text_field']);
+            for ($i=0; $i < $count; $i++):
+                $jobs['loadjobs_text_field'][$i]        = $this->request->post['loadjobs_text_field'][$i];
+                $jobs['loadjobs_status_field'][$i]      = $this->request->post['loadjobs_status_field'][$i];
+                $jobs['loadjobs_business_field'][$i]    = $this->request->post['loadjobs_business_field'][$i];
+                $jobs['loadjobs_position_field'][$i]    = $this->request->post['loadjobs_position_field'][$i];
+                $jobs['loadjobs_description_field'][$i] = $this->request->post['loadjobs_description_field'][$i];
+                $jobs['loadjobs_requirements_field'][$i]    = $this->request->post['loadjobs_requirements_field'][$i];
+                $jobs['loadjobs_deadline_field'][$i]        = $this->request->post['loadjobs_deadline_field'][$i];
+                // if ref exists
+                $withRef = $this->db->query("SELECT * FROM " . DB_PREFIX . "jobs WHERE ref_id = '" . $this->db->escape($jobs['loadjobs_text_field'][$i]));
+                if($withRef->rows) {
+                    // update
+                    $jobs['status'][] = 'REF ID '. $this->db->escape($jobs['loadjobs_text_field'][$i].' exists, try update';
+                    if($this->db->query("UPDATE " . DB_PREFIX . "jobs SET `business` = '" . $this->db->escape($jobs['loadjobs_business_field'][$i]) . "', `status` = '" . $this->db->escape($jobs['loadjobs_status_field'][$i]) . "', `position` = '" . $this->db->escape($jobs['loadjobs_position_field'][$i]) . "', `description` = '" . $this->db->escape($jobs['loadjobs_description_field'][$i]) . "', `requirements` = '" . $this->db->escape($jobs['loadjobs_requirements_field'][$i]) . "', `deadline` = '" . $this->db->escape($jobs['loadjobs_deadline_field'][$i]) . "' WHERE ref_id = '" . $jobs['loadjobs_text_field'][$i] . "'")) {
+                        $jobs['status'][] = 'Job with REF ID '. $this->db->escape($jobs['loadjobs_text_field'][$i].' updated successfully';
+                    } else {
+                        $jobs['status'][] = 'Job with REF ID '. $this->db->escape($jobs['loadjobs_text_field'][$i].' not updated';
+                    }
+                } else {
+                    if(!$this->db->query("INSERT INTO " . DB_PREFIX . "jobs SET  `ref_id` = '" . $this->db->escape($jobs['loadjobs_text_field'][$i]) . "',  `business` = '" . $this->db->escape($jobs['loadjobs_business_field'][$i]) . "', `status` = '" . $this->db->escape($jobs['loadjobs_status_field'][$i]) . "', `position` = '" . $this->db->escape($jobs['loadjobs_position_field'][$i]) . "', `description` = '" . $this->db->escape($jobs['loadjobs_description_field'][$i]) . "', `requirements` = '" . $this->db->escape($jobs['loadjobs_requirements_field'][$i]) . "', `deadline` = '" . $this->db->escape($jobs['loadjobs_deadline_field'][$i]) . "'")) {
+                        error_log($jobs['loadjobs_text_field'][$i]. ' not saved ');
+                        $jobs['status'][] = $jobs['loadjobs_text_field'][$i]. ' not saved ';
+                    } else {
+                        error_log($jobs['loadjobs_text_field'][$i]. ' well saved ');
+                        $jobs['status'][] = $jobs['loadjobs_text_field'][$i]. ' saved ';
+                    }
+                }
+            endfor;
+            return $jobs['status'];
+        } else {
+            return false;
+        }
+        //save now
     }
 
     /* Function that validates the data when Save Button is pressed */
@@ -187,6 +174,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
         if(!$jobsT) {
             $query = "CREATE TABLE ".DB_PREFIX."jobs (
                       job_id int(11) AUTO_INCREMENT,
+                      ref_id varchar(50) NOT NULL,
                       business varchar(50) NOT NULL,
                       position varchar(50) NOT NULL,
                       description varchar(200) NOT NULL,

@@ -14,6 +14,12 @@
     </div>
   </div>
   <div class="container-fluid">
+    {% if status %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ implode(',', status) }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+
     {% if error_warning %}
     <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
       <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -31,12 +37,12 @@
               <input type="number" required name="loadjobs_limit_field" data-id="input-limit" class="form-control" value="{{ loadjobs_limit_field }}">
             </div>
           </div>
+          {% for job in jobs %}
           <div class="job-body jobs">
-            {% for j in 0..totaljobs %}
             <div class="form-group">
               <label class="col-sm-2 control-label" for="textarea-loadjobs_text_field">{{ entry_code }}</label>
               <div class="col-sm-10">
-                <input type="text" name="loadjobs_text_field[]" data-id="input-reference" class="form-control" value="{{ loadjobs_text_field.j }}" />
+                <input type="text" name="loadjobs_text_field[]" data-id="input-reference" class="form-control" value="{{ job.ref_id }}" />
                 {% if error_code %}
                 <div class="text-danger">{{ error_code }}</div>
                 {% endif %}
@@ -45,7 +51,7 @@
             <div class="form-group required">
               <label class="col-sm-2 control-label" for="textarea-loadjobs_business_field">{{ entry_business }}</label>
               <div class="col-sm-10">
-                <input type="text" name="loadjobs_business_field[]" data-id="input-business" class="form-control" value="{{ loadjobs_business_field.j }}" />
+                <input type="text" name="loadjobs_business_field[]" data-id="input-business" class="form-control" value="{{ job.business }}" />
                 {% if error_code %}
                 <div class="text-danger">{{ error_code }}</div>
                 {% endif %}
@@ -54,7 +60,7 @@
             <div class="form-group required">
               <label class="col-sm-2 control-label" for="textarea-loadjobs_position_field">{{ entry_position }}</label>
               <div class="col-sm-10">
-                <input type="text" name="loadjobs_position_field[]" data-id="input-position" class="form-control" value="{{ loadjobs_position_field.j }}" />
+                <input type="text" name="loadjobs_position_field[]" data-id="input-position" class="form-control" value="{{ job.position }}" />
                 {% if error_code %}
                 <div class="text-danger">{{ error_code }}</div>
                 {% endif %}
@@ -63,7 +69,7 @@
             <div class="form-group required">
               <label class="col-sm-2 control-label" for="textarea-loadjobs_description_field">{{ entry_description }}</label>
               <div class="col-sm-10">
-                <input type="text" name="loadjobs_description_field[]" data-id="input-description" class="form-control" value="{{ loadjobs_description_field.j }}" />
+                <input type="text" name="loadjobs_description_field[]" data-id="input-description" class="form-control" value="{{ job.description }}" />
                 {% if error_code %}
                 <div class="text-danger">{{ error_code }}</div>
                 {% endif %}
@@ -72,7 +78,7 @@
             <div class="form-group required">
               <label class="col-sm-2 control-label" for="textarea-loadjobs_requirements_field">{{ entry_requirements }}</label>
               <div class="col-sm-10">
-                <input type="text" name="loadjobs_requirements_field[]" data-id="input-requirements" class="form-control" value="{{ loadjobs_requirements_field.j }}" />
+                <input type="text" name="loadjobs_requirements_field[]" data-id="input-requirements" class="form-control" value="{{ job.requirements }}" />
                 {% if error_code %}
                 <div class="text-danger">{{ error_code }}</div>
                 {% endif %}
@@ -82,7 +88,7 @@
             <div class="form-group required">
               <label class="col-sm-2 control-label" for="textarea-loadjobs_deadline_field">{{ entry_deadline }}</label>
               <div class="col-sm-10">
-                <input type="date" name="loadjobs_deadline_field[]" data-id="input-deadline" class="form-control" value="{{ loadjobs_deadline_field.j }}" />
+                <input type="date" name="loadjobs_deadline_field[]" data-id="input-deadline" class="form-control" value="{{ job.deadline }}" />
                 {% if error_code %}
                 <div class="text-danger">{{ error_code }}</div>
                 {% endif %}
@@ -92,26 +98,38 @@
               <label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
               <div class="col-sm-10">
                 <select name="loadjobs_status_field[]" data-id="input-status" class="form-control">
-                  {% if loadjobs_status.j %}
-                  <option value="1" selected="selected">{{ text_enabled }}</option>
-                  <option value="0">{{ text_disabled }}</option>
+                  {% if job.status %}
+                    <option value="1" selected="selected">{{ text_enabled }}</option>
+                    <option value="0">{{ text_disabled }}</option>
                   {% else %}
-                  <option value="1">{{ text_enabled }}</option>
-                  <option value="0" selected="selected">{{ text_disabled }}</option>
+                    <option value="1">{{ text_enabled }}</option>
+                    <option value="0" selected="selected">{{ text_disabled }}</option>
                   {% endif %}
                 </select>
               </div>
             </div>
             <div class="form-group col-xs-12 add-new">
-              <a href="#new" class="col-xs-6 btn btn-primary"> Add Job</a>
-              <hr/>
+              <a href="#new" id="newjob" class="col-xs-6 btn btn-primary"> Add Job</a>
             </div>
-            {% endfor %}
+          </div>
+          {% endfor %}
+          <hr/>
+          <div class="form-group col-xs-12">
+              <input type="submit" name="savejobs" value="Save Now" class="btn btn-primary" />
           </div>
         </form> 
       </div>
   </div>
   </div>
 </div>
+<script type="text/javascript">
+  jQuery(function() {
+    jQuery('a#newjob').on('click', function(){
+      var lastjob = jQuery('div.job-body').html();
+      
+      console.log(lastjob);
+    });
+  });
+</script>
 
 {{ footer }}
