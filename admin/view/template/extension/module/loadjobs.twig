@@ -37,6 +37,7 @@
               <input type="number" required name="loadjobs_limit_field" data-id="input-limit" class="form-control" value="{{ loadjobs_limit_field }}">
             </div>
           </div>
+          <div class="col-xs-12 jobslist">
           {% for job in jobs %}
           <div class="job-body jobs">
             <div class="form-group">
@@ -109,11 +110,15 @@
               </div>
             </div>
             <div class="form-group col-xs-12 add-new">
-              <a href="#new" id="newjob" class="col-xs-6 btn btn-primary"> Add Job</a>
+              <a href="#remove" id="removejob" class="col-xs-6 btn btn-primary"> Delete Job</a>
             </div>
           </div>
           {% endfor %}
+          </div>
           <hr/>
+          <div class="form-group col-xs-12 add-new">
+            <a href="#new" id="newjob" class="col-xs-6 btn btn-primary"> Add Job</a>
+          </div>
           <div class="form-group col-xs-12">
               <input type="submit" name="savejobs" value="Save Now" class="btn btn-primary" />
           </div>
@@ -123,12 +128,12 @@
   </div>
 </div>
 <script type="text/javascript">
-  jQuery(function() {
-    jQuery('a#newjob').on('click', function(){
-      var lastjob = jQuery('div.job-body').html();
-      
-      console.log(lastjob);
-    });
+  document.getElementById('newjob').addEventListener('click',function(){
+    var jobs = document.getElementsByClassName('job-body');
+    var i = tags.length - 1;
+    var newrecord = jobs[i];
+    var cln = newrecord.cloneNode(true);
+    document.getElementsByClassName('jobslist')[0].appendChild(cln);
   });
 </script>
 
