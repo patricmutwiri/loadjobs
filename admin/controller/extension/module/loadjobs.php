@@ -61,7 +61,10 @@ class ControllerExtensionModuleLoadjobs extends Controller {
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             // Parse all the coming data to Setting Model to save it in database.
             $this->model_setting_setting->editSetting('loadjobs', $this->request->post);
-     
+        
+            $status = $this->saveJobs();
+            $data['status'] = json_encode($status);
+
             // To display the success text on data save
             $this->session->data['success'] = $this->language->get('text_success');
      
@@ -149,11 +152,6 @@ class ControllerExtensionModuleLoadjobs extends Controller {
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
-        
-        $data['status'] = '';
-        if (isset($this->request->post['savejobs'])) {
-            $data['status'] = json_encode($this->saveJobs());
-        }
 
         // list jobs
         $data['totaljobs'] = 0;
@@ -169,22 +167,22 @@ class ControllerExtensionModuleLoadjobs extends Controller {
     }
 
     // save to db
-    public function saveJobs()
+    protected function saveJobs()
     {
         if (isset($this->request->post['loadjobs_text_field'])) {
             $jobs   = array();
             $jobs['status'] = '';
-            $count  = count($this->request->post['loadjobs_text_field']);
+            $count  = count($_POST['loadjobs_text_field']);
             for ($i=0; $i < $count; $i++):
-                $jobs['loadjobs_text_field'][$i]        = $this->request->post['loadjobs_text_field'][$i].date('dmH',time());
-                $jobs['loadjobs_status_field'][$i]      = $this->request->post['loadjobs_status_field'][$i];
-                $jobs['loadjobs_business_field'][$i]    = $this->request->post['loadjobs_business_field'][$i];
-                $jobs['loadjobs_position_field'][$i]    = $this->request->post['loadjobs_position_field'][$i];
-                $jobs['loadjobs_description_field'][$i] = $this->request->post['loadjobs_description_field'][$i];
-                $jobs['loadjobs_requirements_field'][$i]    = $this->request->post['loadjobs_requirements_field'][$i];
-                $jobs['loadjobs_deadline_field'][$i]        = $this->request->post['loadjobs_deadline_field'][$i];
+                $jobs['loadjobs_text_field'][$i]        = $_POST['loadjobs_text_field'][$i].date('dmH',time());
+                $jobs['loadjobs_status_field'][$i]      = $_POST['loadjobs_status_field'][$i];
+                $jobs['loadjobs_business_field'][$i]    = $_POST['loadjobs_business_field'][$i];
+                $jobs['loadjobs_position_field'][$i]    = $_POST['loadjobs_position_field'][$i];
+                $jobs['loadjobs_description_field'][$i] = $_POST['loadjobs_description_field'][$i];
+                $jobs['loadjobs_requirements_field'][$i]    = $_POST['loadjobs_requirements_field'][$i];
+                $jobs['loadjobs_deadline_field'][$i]        = $_POST['loadjobs_deadline_field'][$i];
                 // if ref exists
-                $withRef = $this->db->query("SELECT * FROM " . DB_PREFIX . "jobs WHERE ref_id = '" . $this->db->escape($jobs['loadjobs_text_field'][$i]));
+                $withRef = $this->db->query("SELECT * FROM " . DB_PREFIX . "jobs WHERE ref_id = '" . $this->db->escape($jobs['loadjobs_text_field'][$i])."'");
                 if($withRef->rows) {
                     // update
                     $jobs['status'][] = "REF ID ". $jobs['loadjobs_text_field'][$i]." exists, try update";
