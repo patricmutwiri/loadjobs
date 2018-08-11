@@ -1,0 +1,7 @@
+<div class="col-xs-12">
+  <ul class="list">
+    {% for jobs in jobs %}
+    <li><a href="{{ job.job_id }}">{{ job.ref_id }}/{{ job.position }}</a></li>
+    {% endfor %}
+  </ul>
+</div>
