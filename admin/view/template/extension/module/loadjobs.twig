@@ -40,7 +40,7 @@
           <div class="col-xs-12 jobslist">
           {% for job in jobs %}
           <div class="job-body jobs">
-            <div class="form-group">
+            <div class="form-group required">
               <label class="col-sm-2 control-label" for="textarea-loadjobs_text_field">{{ entry_code }}</label>
               <div class="col-sm-10">
                 <input type="text" name="loadjobs_text_field[]" data-id="input-reference" class="form-control" value="{{ job.ref_id }}" />
@@ -89,7 +89,7 @@
             <div class="form-group required">
               <label class="col-sm-2 control-label" for="textarea-loadjobs_deadline_field">{{ entry_deadline }}</label>
               <div class="col-sm-10">
-                <input type="date" name="loadjobs_deadline_field[]" data-id="input-deadline" class="form-control" value="{{ job.deadline }}" />
+                <input type="text" name="loadjobs_deadline_field[]" data-id="input-deadline" class="form-control" value="{{ job.deadline }}" />
                 {% if error_code %}
                 <div class="text-danger">{{ error_code }}</div>
                 {% endif %}
@@ -114,7 +114,7 @@
             </div>
           </div>
             {% if job.job_id %}
-              <input type="text" name="job_id[]" value="{{ job.job_id }}">
+              <input type="hidden" name="job_id[]" value="{{ job.job_id }}">
             {% endif %}
           {% endfor %}
           </div>
@@ -130,7 +130,9 @@
   </div>
   </div>
 </div>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript">
+  $( "input[data-id='input-deadline']" ).datepicker();
   document.getElementById("newjob").addEventListener('click',function(e){   
     var jobs = document.getElementsByClassName('job-body');
     var i = jobs.length - 1;

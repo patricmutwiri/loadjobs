@@ -174,14 +174,14 @@ class ControllerExtensionModuleLoadjobs extends Controller {
             $jobs['status'] = '';
             $count  = count($_POST['loadjobs_text_field']);
             for ($i=0; $i < $count; $i++):
-                $jobs['loadjobs_text_field'][$i]        = $_POST['loadjobs_text_field'][$i].date('dmH',time());
+                $jobs['loadjobs_text_field'][$i]        = $_POST['loadjobs_text_field'][$i];
                 $jobs['loadjobs_status_field'][$i]      = $_POST['loadjobs_status_field'][$i];
                 $jobs['loadjobs_business_field'][$i]    = $_POST['loadjobs_business_field'][$i];
                 $jobs['loadjobs_position_field'][$i]    = $_POST['loadjobs_position_field'][$i];
                 $jobs['loadjobs_description_field'][$i] = $_POST['loadjobs_description_field'][$i];
                 $jobs['loadjobs_requirements_field'][$i]    = $_POST['loadjobs_requirements_field'][$i];
                 $jobs['loadjobs_deadline_field'][$i]        = $_POST['loadjobs_deadline_field'][$i];
-                $jobs['job_id'][$i]                         = $_POST['job_id'][$i];
+                $jobs['job_id'][$i]                         = isset($_POST['job_id'][$i]) ? $_POST['job_id'][$i] : null;
                 // if ref exists
                 $withRef = $this->db->query("SELECT * FROM " . DB_PREFIX . "jobs WHERE ref_id = '" . $this->db->escape($jobs['loadjobs_text_field'][$i])."'");
                 if($withRef->rows) {
