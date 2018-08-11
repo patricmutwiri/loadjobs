@@ -28,28 +28,23 @@
 </script>
 <div id="accordion-mutwiri" class="col-xs-12">
     {% for job in jobs %}
-		<div class="this-job col-xs-12">
-		    <h4>{{ job.ref_id }}/{{ job.position }}</h4>
+	    <h4 class="this-job ref-pos col-xs-12">{{ job.ref_id }}/{{ job.position }}</h4>
+	    <div class="this-job job-details col-xs-12">
 			<div class="col-xs-12 business">
-				<p>
-					{{ job.business }}
-				</p>
+				<p>{{ job.business }}</p>
 			</div>
 			<div class="col-xs-12 description">
-				<p>
-					{{ job.description }}
-				</p>
+				<p>{{ job.description }}</p>
 			</div>
 			<div class="col-xs-12 requirements">
-				<p>
-					{{ job.requirements }}
-				</p>
+				<p>{{ job.requirements }}</p>
 			</div>
 			<div class="col-xs-12 deadline">
-				Posted On: {{ job.created_at }}
-				Application Deadline: {{ job.deadline }}
+				<span class="col-xs-12">Posted On: {{ job.created_at }}</span>
+				<span class="col-xs-12">Application Deadline: {{ job.deadline }}</span>
 			</div>
 			<!-- Apply here -->
+			<hr/>
 			<div class="col-xs-6">
 				<span id="apply" class="btn btn-flat">Apply Here</span>
 			</div>

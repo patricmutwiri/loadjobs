@@ -4,7 +4,6 @@ class ControllerExtensionModuleLoadjobs extends Controller {
         $this->load->language('extension/module/loadjobs');
         $limit = $setting['limit'];
         $status = $setting['status'];
-        var_dump($status);
         if(!$status) {
             echo 'jobs not enabled';
         } else {

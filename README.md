@@ -12,4 +12,6 @@ Load a list of job opportunities from the database.
 - Deadline
 - Status
 
+>> get in touch if installation becomes rocky
+
 Made with love by Patrick Mutwiri. 
