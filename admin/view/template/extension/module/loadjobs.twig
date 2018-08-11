@@ -70,7 +70,7 @@
             <div class="form-group required">
               <label class="col-sm-2 control-label" for="textarea-loadjobs_description_field">{{ entry_description }}</label>
               <div class="col-sm-10">
-                <input type="text" name="loadjobs_description_field[]" data-id="input-description" class="form-control" value="{{ job.description }}" />
+                <textarea name="loadjobs_description_field[]" data-id="input-description" class="form-control">{{ job.description }}</textarea>
                 {% if error_code %}
                 <div class="text-danger">{{ error_code }}</div>
                 {% endif %}
@@ -79,9 +79,9 @@
             <div class="form-group required">
               <label class="col-sm-2 control-label" for="textarea-loadjobs_requirements_field">{{ entry_requirements }}</label>
               <div class="col-sm-10">
-                <input type="text" name="loadjobs_requirements_field[]" data-id="input-requirements" class="form-control" value="{{ job.requirements }}" />
+                <textarea name="loadjobs_requirements_field[]" data-id="input-requirements" class="form-control">{{ job.requirements }}</textarea>
                 {% if error_code %}
-                <div class="text-danger">{{ error_code }}</div>
+                  <div class="text-danger">{{ error_code }}</div>
                 {% endif %}
               </div>
             </div>
@@ -111,7 +111,7 @@
             </div>
             {% if job.job_id %}
               <div class="form-group col-xs-12 remove-job">
-                <a href="{{ del_url }}&remove_id={{ job.job_id }}" data-id="removejob" class="col-xs-3 btn btn-danger btn-primary">&nbsp;<i class="fa fa-trash fw"></i>Delete Job</a>
+                <a href="{{ del_url }}&remove_id={{ job.job_id }}" data-id="removejob" class="col-xs-3 btn btn-danger btn-primary">&nbsp;<i class="fa fa-trash fw"></i>&nbsp;Delete Job</a>
               </div>
               <hr/>
             {% endif %}

@@ -176,7 +176,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
     {
         if (isset($this->request->get['remove_id'])) {
             $job_id = $this->request->get['remove_id'];
-            $delJob = $this->db->query("DELETE FROM '.DB_PREFIX.'jobs WHERE job_id = '".$this->db->escape($job_id)."'");
+            $delJob = $this->db->query("DELETE FROM ".DB_PREFIX."jobs WHERE job_id = '".(int)$job_id."'");
             if($delJob){
                 $this->session->data['success'] = 'Job removed successfully';
             } else {
