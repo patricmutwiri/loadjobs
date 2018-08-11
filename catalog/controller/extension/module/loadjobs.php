@@ -12,9 +12,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
             // query 
             $query = $this->db->query("SELECT * FROM ".DB_PREFIX."jobs WHERE status=1");
             $jobs = $query->rows;
-            foreach ($jobs as $key => $job) {
-                $data['jobs'][] = $job;
-            }
+            $data['jobs'] = $jobs;
             //json
             if(isset($this->request->get['json'])) {
                 if($this->request->get['json'] == 'patricks') { 
