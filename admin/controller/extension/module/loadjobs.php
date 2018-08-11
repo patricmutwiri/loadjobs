@@ -56,7 +56,11 @@ class ControllerExtensionModuleLoadjobs extends Controller {
      
         // Load the Setting Model  (All of the OpenCart Module & General Settings are saved using this Model )
         $this->load->model('setting/setting');
-     
+        
+        // do delete this job
+        if (isset($this->request->get['remove_id'])) { 
+            $this->deleteJob();
+        }
         // Start If: Validates and check if data is coming by save (POST) method
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             // Parse all the coming data to Setting Model to save it in database.
@@ -131,7 +135,9 @@ class ControllerExtensionModuleLoadjobs extends Controller {
             'href'      => $this->url->link('extension/module/loadjobs', 'user_token=' . $this->session->data['user_token'], 'SSL'),
             'separator' => ' :: '
         );
-          
+        
+        $data['del_url'] = $this->url->link('extension/module/loadjobs', 'user_token=' . $this->session->data['user_token'], 'SSL');
+        
         $data['action'] = $this->url->link('extension/module/loadjobs', 'user_token=' . $this->session->data['user_token'], 'SSL'); // URL to be directed when the save button is pressed
      
         $data['cancel'] = $this->url->link('extension/module/loadjobs', 'user_token=' . $this->session->data['user_token'], 'SSL'); // URL to be redirected when cancel button is pressed
@@ -165,6 +171,20 @@ class ControllerExtensionModuleLoadjobs extends Controller {
         $this->response->setOutput($this->load->view('extension/module/loadjobs', $data));
 
     }
+    // delete job
+    protected function deleteJob()
+    {
+        if (isset($this->request->get['remove_id'])) {
+            $job_id = $this->request->get['remove_id'];
+            $delJob = $this->db->query("DELETE FROM '.DB_PREFIX.'jobs WHERE job_id = '".$this->db->escape($job_id)."'");
+            if($delJob){
+                $this->session->data['success'] = 'Job removed successfully';
+            } else {
+                $this->session->data['success'] = 'Job not removed';
+            }
+            $this->response->redirect($this->url->link('extension/module/loadjobs', 'user_token=' . $this->session->data['user_token'], 'SSL'));
+        }
+    }
 
     // save to db
     protected function saveJobs()
@@ -182,6 +202,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
                 $jobs['loadjobs_requirements_field'][$i]    = $_POST['loadjobs_requirements_field'][$i];
                 $jobs['loadjobs_deadline_field'][$i]        = $_POST['loadjobs_deadline_field'][$i];
                 $jobs['job_id'][$i]                         = isset($_POST['job_id'][$i]) ? $_POST['job_id'][$i] : null;
+                $jobs['created_at'][$i]                     = date('d-m-y h:i', time());
                 // if ref exists
                 $withRef = $this->db->query("SELECT * FROM " . DB_PREFIX . "jobs WHERE ref_id = '" . $this->db->escape($jobs['loadjobs_text_field'][$i])."'");
                 if($withRef->rows) {
@@ -193,7 +214,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
                         $jobs['status'][] = "Job with REF ID ". $jobs['loadjobs_text_field'][$i]." not updated";
                     }
                 } else {
-                    if(!$this->db->query("INSERT INTO " . DB_PREFIX . "jobs SET  `ref_id` = '" . $this->db->escape($jobs['loadjobs_text_field'][$i]) . "',  `business` = '" . $this->db->escape($jobs['loadjobs_business_field'][$i]) . "', `status` = '" . $this->db->escape($jobs['loadjobs_status_field'][$i]) . "', `position` = '" . $this->db->escape($jobs['loadjobs_position_field'][$i]) . "', `description` = '" . $this->db->escape($jobs['loadjobs_description_field'][$i]) . "', `requirements` = '" . $this->db->escape($jobs['loadjobs_requirements_field'][$i]) . "', `deadline` = '" . $this->db->escape($jobs['loadjobs_deadline_field'][$i]) . "'")) {
+                    if(!$this->db->query("INSERT INTO " . DB_PREFIX . "jobs SET `created_at` = '" . $jobs['created_at'][$i] . "', `ref_id` = '" . $this->db->escape($jobs['loadjobs_text_field'][$i]) . "',  `business` = '" . $this->db->escape($jobs['loadjobs_business_field'][$i]) . "', `status` = '" . $this->db->escape($jobs['loadjobs_status_field'][$i]) . "', `position` = '" . $this->db->escape($jobs['loadjobs_position_field'][$i]) . "', `description` = '" . $this->db->escape($jobs['loadjobs_description_field'][$i]) . "', `requirements` = '" . $this->db->escape($jobs['loadjobs_requirements_field'][$i]) . "', `deadline` = '" . $this->db->escape($jobs['loadjobs_deadline_field'][$i]) . "'")) {
                         error_log($jobs['loadjobs_text_field'][$i]. ' not saved ');
                         $jobs['status'][] = $jobs['loadjobs_text_field'][$i]. ' not saved ';
                     } else {
@@ -234,6 +255,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
                       requirements varchar(200) NOT NULL,
                       deadline varchar(20) NOT NULL,
                       status int,
+                      created_at varchar(20) NULL,
                       PRIMARY KEY  (job_id)
                       )";
             if(!$this->db->query($query)) {
@@ -251,6 +273,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
                       cover varchar(200) NOT NULL,
                       application_date varchar(200) NOT NULL,
                       stages varchar(200) NOT NULL,
+                      created_at varchar(20) NULL,
                       PRIMARY KEY  (application_id)
                       )";
             if(!$this->db->query($query)) {

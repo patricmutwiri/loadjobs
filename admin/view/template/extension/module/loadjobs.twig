@@ -109,9 +109,12 @@
                 </select>
               </div>
             </div>
-            <div class="form-group col-xs-12 add-new">
-              <a href="#remove" id="removejob" class="col-xs-6 btn btn-primary"> Delete Job</a>
-            </div>
+            {% if job.job_id %}
+              <div class="form-group col-xs-12 remove-job">
+                <a href="{{ del_url }}&remove_id={{ job.job_id }}" data-id="removejob" class="col-xs-3 btn btn-danger btn-primary">&nbsp;<i class="fa fa-trash fw"></i>Delete Job</a>
+              </div>
+              <hr/>
+            {% endif %}
           </div>
             {% if job.job_id %}
               <input type="hidden" name="job_id[]" value="{{ job.job_id }}">
@@ -120,7 +123,7 @@
           </div>
           <hr/>
           <div class="form-group col-xs-12 add-new">
-            <span id="newjob" class="newjob-here col-xs-6 btn btn-primary"> Add Job</span>
+            <span id="newjob" class="newjob-here col-xs-6 btn btn-primary"><i class="fa fa-plus fw"></i> Add Job</span>
           </div>
           <div class="form-group col-xs-12">
               <input type="submit" name="savejobs" value="Save Now" class="btn btn-primary" />
