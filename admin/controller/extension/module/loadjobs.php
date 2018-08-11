@@ -127,7 +127,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
         );
         $data['breadcrumbs'][] = array(
             'text'      => $this->language->get('text_module'),
-            'href'      => $this->url->link('extension/module', 'user_token=' . $this->session->data['user_token'], 'SSL'),
+            'href'      => $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'], 'SSL'),
             'separator' => ' :: '
         );
         $data['breadcrumbs'][] = array(
@@ -140,7 +140,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
         
         $data['action'] = $this->url->link('extension/module/loadjobs', 'user_token=' . $this->session->data['user_token'], 'SSL'); // URL to be directed when the save button is pressed
      
-        $data['cancel'] = $this->url->link('extension/module/loadjobs', 'user_token=' . $this->session->data['user_token'], 'SSL'); // URL to be redirected when cancel button is pressed
+        $data['cancel'] = $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'], 'SSL'); // URL to be redirected when cancel button is pressed
               
         // limit
         if (isset($this->request->post['loadjobs_limit_field'])) {
@@ -182,7 +182,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
             } else {
                 $this->session->data['success'] = 'Job not removed';
             }
-            $this->response->redirect($this->url->link('extension/module/loadjobs', 'user_token=' . $this->session->data['user_token'], 'SSL'));
+            $this->response->redirect($this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'], 'SSL'));
         }
     }
 
@@ -195,7 +195,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
             $count  = count($_POST['loadjobs_text_field']);
             for ($i=0; $i < $count; $i++):
                 $jobs['loadjobs_text_field'][$i]        = $_POST['loadjobs_text_field'][$i];
-                $jobs['loadjobs_status_field'][$i]      = $_POST['loadjobs_status_field'][$i];
+                $jobs['loadjobs_status_field'][$i]      = $_POST['loadjobs_enabled_field'][$i];
                 $jobs['loadjobs_business_field'][$i]    = $_POST['loadjobs_business_field'][$i];
                 $jobs['loadjobs_position_field'][$i]    = $_POST['loadjobs_position_field'][$i];
                 $jobs['loadjobs_description_field'][$i] = $_POST['loadjobs_description_field'][$i];

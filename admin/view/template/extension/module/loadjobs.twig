@@ -37,6 +37,20 @@
               <input type="number" required name="loadjobs_limit_field" data-id="input-limit" class="form-control" value="{{ loadjobs_limit_field }}">
             </div>
           </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <select name="loadjobs_status_field" data-id="input-status" class="form-control">
+                {% if loadjobs_status_field %}
+                  <option value="1" selected="selected">{{ text_enabled }}</option>
+                  <option value="0">{{ text_disabled }}</option>
+                {% else %}
+                  <option value="1">{{ text_enabled }}</option>
+                  <option value="0" selected="selected">{{ text_disabled }}</option>
+                {% endif %}
+              </select>
+            </div>
+          </div>
           <div class="col-xs-12 jobslist">
           {% for job in jobs %}
           <div class="job-body jobs">
@@ -96,9 +110,9 @@
               </div>
             </div>
             <div class="form-group">
-              <label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
+              <label class="col-sm-2 control-label" for="input-enabled">{{ entry_status }}</label>
               <div class="col-sm-10">
-                <select name="loadjobs_status_field[]" data-id="input-status" class="form-control">
+                <select name="loadjobs_enabled_field[]" data-id="input-enabled" class="form-control">
                   {% if job.status %}
                     <option value="1" selected="selected">{{ text_enabled }}</option>
                     <option value="0">{{ text_disabled }}</option>
