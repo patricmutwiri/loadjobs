@@ -18,7 +18,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
             //json
             if(isset($this->request->get['json'])) {
                 if($this->request->get['json'] == 'patricks') { 
-                    return $this->load->view('extension/module/loadjobs', json_encode($data));
+                    echo json_encode($data);
                 }
             } else {
                 return $this->load->view('extension/module/loadjobs', $data);
