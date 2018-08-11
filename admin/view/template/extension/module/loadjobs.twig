@@ -113,6 +113,9 @@
               <a href="#remove" id="removejob" class="col-xs-6 btn btn-primary"> Delete Job</a>
             </div>
           </div>
+            {% if job.job_id %}
+              <input type="text" name="job_id[]" value="{{ job.job_id }}">
+            {% endif %}
           {% endfor %}
           </div>
           <hr/>
