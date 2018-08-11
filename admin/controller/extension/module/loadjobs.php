@@ -54,26 +54,39 @@ class ControllerExtensionModuleLoadjobs extends Controller {
         // Set the title of the page to the heading title in the Language file i.e., Load Offers
         $this->document->setTitle($this->language->get('heading_title'));
      
-        // Load the Setting Model  (All of the OpenCart Module & General Settings are saved using this Model )
-        $this->load->model('setting/setting');
+        $this->load->model('setting/module');
         
         // do delete this job
         if (isset($this->request->get['remove_id'])) { 
             $this->deleteJob();
         }
-        // Start If: Validates and check if data is coming by save (POST) method
+
+        if (isset($this->request->get['module_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+            $module_info = $this->model_setting_module->getModule($this->request->get['module_id']);
+        }
+
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             // Parse all the coming data to Setting Model to save it in database.
-            $this->model_setting_setting->editSetting('loadjobs', $this->request->post);
-        
-            $status = $this->saveJobs();
-            $data['status'] = json_encode($status);
+            $module_info = $this->model_setting_module->getModule($this->request->get['module_id']);
 
+            $ljsettings = array();
+            $ljsettings['status']    = $this->request->post['status'];
+            $ljsettings['limit']     = $this->request->post['limit'];
+            $ljsettings['name']                     = $this->request->post['name'];
+            
+            if (!isset($this->request->get['module_id'])) {
+                $this->model_setting_module->addModule('loadjobs', $ljsettings);
+            } else {
+                $this->model_setting_module->editModule($this->request->get['module_id'], $ljsettings);
+            }
+
+            $status = $this->saveJobs();
+            $data['jstatus'] = json_encode($status);
             // To display the success text on data save
             $this->session->data['success'] = $this->language->get('text_success');
      
             // Redirect to the Module Listing
-            $this->response->redirect($this->url->link('extension/module/loadjobs', 'user_token=' . $this->session->data['user_token'], 'SSL'));
+            $this->response->redirect($this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=module', true));
         }
      
         // Assign the language data for parsing it to view
@@ -121,43 +134,60 @@ class ControllerExtensionModuleLoadjobs extends Controller {
         // Making of Breadcrumbs to be displayed on site
         $data['breadcrumbs'] = array();
         $data['breadcrumbs'][] = array(
-            'text'      => $this->language->get('text_home'),
-            'href'      => $this->url->link('common/home', 'user_token=' . $this->session->data['user_token'], 'SSL'),
-            'separator' => false
+            'text' => $this->language->get('text_home'),
+            'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'], true)
         );
+
         $data['breadcrumbs'][] = array(
-            'text'      => $this->language->get('text_module'),
-            'href'      => $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'], 'SSL'),
-            'separator' => ' :: '
+            'text' => $this->language->get('text_extension'),
+            'href' => $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=module', true)
         );
-        $data['breadcrumbs'][] = array(
-            'text'      => $this->language->get('heading_title'),
-            'href'      => $this->url->link('extension/module/loadjobs', 'user_token=' . $this->session->data['user_token'], 'SSL'),
-            'separator' => ' :: '
-        );
+
+        if (!isset($this->request->get['module_id'])) {
+            $data['breadcrumbs'][] = array(
+                'text' => $this->language->get('heading_title'),
+                'href' => $this->url->link('extension/module/loadjobs', 'user_token=' . $this->session->data['user_token'], true)
+            );
+        } else {
+            $data['breadcrumbs'][] = array(
+                'text' => $this->language->get('heading_title'),
+                'href' => $this->url->link('extension/module/loadjobs', 'user_token=' . $this->session->data['user_token'] . '&module_id=' . $this->request->get['module_id'], true)
+            );
+        }
         
         $data['del_url'] = $this->url->link('extension/module/loadjobs', 'user_token=' . $this->session->data['user_token'], 'SSL');
         
-        $data['action'] = $this->url->link('extension/module/loadjobs', 'user_token=' . $this->session->data['user_token'], 'SSL'); // URL to be directed when the save button is pressed
-     
-        $data['cancel'] = $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'], 'SSL'); // URL to be redirected when cancel button is pressed
-              
-        // limit
-        if (isset($this->request->post['loadjobs_limit_field'])) {
-            $data['loadjobs_limit_field'] = $this->request->post['loadjobs_limit_field'];
+        if (!isset($this->request->get['module_id'])) {
+            $data['action'] = $this->url->link('extension/module/loadjobs', 'user_token=' . $this->session->data['user_token'], true);
         } else {
-            $data['loadjobs_limit_field'] = $this->config->get('loadjobs_limit_field');
+            $data['action'] = $this->url->link('extension/module/loadjobs', 'user_token=' . $this->session->data['user_token'] . '&module_id=' . $this->request->get['module_id'], true);
+        }
+     
+        $data['cancel'] = $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=module', true);
+        
+        if (isset($this->request->post['name'])) {
+            $data['name'] = $this->request->post['name'];
+        } elseif (!empty($module_info)) {
+            $data['name'] = $module_info['name'];
+        } else {
+            $data['name'] = '';
         }
 
-        if (isset($this->request->post['loadjobs_status_field'])) {
-            $data['loadjobs_status_field'] = $this->request->post['loadjobs_status_field'];
+        if (isset($this->request->post['limit'])) {
+            $data['limit'] = $this->request->post['limit'];
+        } elseif (!empty($module_info)) {
+            $data['limit'] = $module_info['limit'];
         } else {
-            $data['loadjobs_status_field'] = $this->config->get('loadjobs_status_field');
+            $data['limit'] = '';
         }
-       
-        $data['header'] = $this->load->controller('common/header');
-        $data['column_left'] = $this->load->controller('common/column_left');
-        $data['footer'] = $this->load->controller('common/footer');
+
+        if (isset($this->request->post['status'])) {
+            $data['status'] = $this->request->post['status'];
+        } elseif (!empty($module_info)) {
+            $data['status'] = $module_info['status'];
+        } else {
+            $data['status'] = '';
+        }
 
         // list jobs
         $data['totaljobs'] = 0;
@@ -167,6 +197,10 @@ class ControllerExtensionModuleLoadjobs extends Controller {
             $data['jobs'] = $jobs->rows;
             $data['totaljobs'] = count($data['jobs']);
         }
+
+        $data['header'] = $this->load->controller('common/header');
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['footer'] = $this->load->controller('common/footer');
 
         $this->response->setOutput($this->load->view('extension/module/loadjobs', $data));
 
@@ -182,7 +216,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
             } else {
                 $this->session->data['success'] = 'Job not removed';
             }
-            $this->response->redirect($this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'], 'SSL'));
+            $this->response->redirect($this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=module', true));
         }
     }
 
@@ -195,7 +229,7 @@ class ControllerExtensionModuleLoadjobs extends Controller {
             $count  = count($_POST['loadjobs_text_field']);
             for ($i=0; $i < $count; $i++):
                 $jobs['loadjobs_text_field'][$i]        = $_POST['loadjobs_text_field'][$i];
-                $jobs['loadjobs_status_field'][$i]      = $_POST['loadjobs_enabled_field'][$i];
+                $jobs['loadjobs_enabled_field'][$i]      = $_POST['loadjobs_enabled_field'][$i];
                 $jobs['loadjobs_business_field'][$i]    = $_POST['loadjobs_business_field'][$i];
                 $jobs['loadjobs_position_field'][$i]    = $_POST['loadjobs_position_field'][$i];
                 $jobs['loadjobs_description_field'][$i] = $_POST['loadjobs_description_field'][$i];
@@ -208,13 +242,13 @@ class ControllerExtensionModuleLoadjobs extends Controller {
                 if($withRef->rows) {
                     // update
                     $jobs['status'][] = "REF ID ". $jobs['loadjobs_text_field'][$i]." exists, try update";
-                    if($this->db->query("UPDATE " . DB_PREFIX . "jobs SET `business` = '" . $this->db->escape($jobs['loadjobs_business_field'][$i]) . "', `status` = '" . $this->db->escape($jobs['loadjobs_status_field'][$i]) . "', `position` = '" . $this->db->escape($jobs['loadjobs_position_field'][$i]) . "', `description` = '" . $this->db->escape($jobs['loadjobs_description_field'][$i]) . "', `requirements` = '" . $this->db->escape($jobs['loadjobs_requirements_field'][$i]) . "', `ref_id` = '" . $this->db->escape($jobs['loadjobs_text_field'][$i]) . "', `deadline` = '" . $this->db->escape($jobs['loadjobs_deadline_field'][$i]) . "' WHERE job_id = '" . $jobs['job_id'][$i] . "'")) {
+                    if($this->db->query("UPDATE " . DB_PREFIX . "jobs SET `business` = '" . $this->db->escape($jobs['loadjobs_business_field'][$i]) . "', `status` = '" . $this->db->escape($jobs['loadjobs_enabled_field'][$i]) . "', `position` = '" . $this->db->escape($jobs['loadjobs_position_field'][$i]) . "', `description` = '" . $this->db->escape($jobs['loadjobs_description_field'][$i]) . "', `requirements` = '" . $this->db->escape($jobs['loadjobs_requirements_field'][$i]) . "', `ref_id` = '" . $this->db->escape($jobs['loadjobs_text_field'][$i]) . "', `deadline` = '" . $this->db->escape($jobs['loadjobs_deadline_field'][$i]) . "' WHERE job_id = '" . $jobs['job_id'][$i] . "'")) {
                         $jobs['status'][] = "Job with REF ID ". $jobs['loadjobs_text_field'][$i]." updated successfully";
                     } else {
                         $jobs['status'][] = "Job with REF ID ". $jobs['loadjobs_text_field'][$i]." not updated";
                     }
                 } else {
-                    if(!$this->db->query("INSERT INTO " . DB_PREFIX . "jobs SET `created_at` = '" . $jobs['created_at'][$i] . "', `ref_id` = '" . $this->db->escape($jobs['loadjobs_text_field'][$i]) . "',  `business` = '" . $this->db->escape($jobs['loadjobs_business_field'][$i]) . "', `status` = '" . $this->db->escape($jobs['loadjobs_status_field'][$i]) . "', `position` = '" . $this->db->escape($jobs['loadjobs_position_field'][$i]) . "', `description` = '" . $this->db->escape($jobs['loadjobs_description_field'][$i]) . "', `requirements` = '" . $this->db->escape($jobs['loadjobs_requirements_field'][$i]) . "', `deadline` = '" . $this->db->escape($jobs['loadjobs_deadline_field'][$i]) . "'")) {
+                    if(!$this->db->query("INSERT INTO " . DB_PREFIX . "jobs SET `created_at` = '" . $jobs['created_at'][$i] . "', `ref_id` = '" . $this->db->escape($jobs['loadjobs_text_field'][$i]) . "',  `business` = '" . $this->db->escape($jobs['loadjobs_business_field'][$i]) . "', `status` = '" . $this->db->escape($jobs['loadjobs_enabled_field'][$i]) . "', `position` = '" . $this->db->escape($jobs['loadjobs_position_field'][$i]) . "', `description` = '" . $this->db->escape($jobs['loadjobs_description_field'][$i]) . "', `requirements` = '" . $this->db->escape($jobs['loadjobs_requirements_field'][$i]) . "', `deadline` = '" . $this->db->escape($jobs['loadjobs_deadline_field'][$i]) . "'")) {
                         error_log($jobs['loadjobs_text_field'][$i]. ' not saved ');
                         $jobs['status'][] = $jobs['loadjobs_text_field'][$i]. ' not saved ';
                     } else {

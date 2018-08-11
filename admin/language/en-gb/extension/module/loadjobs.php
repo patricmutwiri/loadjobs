@@ -3,6 +3,7 @@
 $_['heading_title']       = 'Load Jobs';
  
 // Text
+$_['text_extension']	  = 'Extensions';
 $_['text_module']         = 'Modules';
 $_['text_edit']           = 'Edit Load Jobs Module';
 $_['text_success']        = 'Success: You have modified module Load Jobs!';
