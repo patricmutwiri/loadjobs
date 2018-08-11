@@ -11,3 +11,5 @@ Load a list of job opportunities from the database.
 - Requirements
 - Deadline
 - Status
+
+Made with love by Patrick Mutwiri. 
